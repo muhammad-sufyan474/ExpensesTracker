@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Expenses Tracker</title>
+    <style>
+        input:focus {
+            border: 2px solid navy !important;
+            box-shadow: 0 0 5px rgb(255, 255, 255) !important;
+        }
+
+        #additembtn:focus,
+        #additembtn:hover {
+            background-color: darkgreen !important;
+            box-shadow: 0 0 5px rgb(255, 255, 255) !important;
+        }
+
+        #clearallbtn:focus,
+        #clearallbtn:hover {
+            background-color: rgb(213, 0, 0) !important;
+            box-shadow: 0 0 5px rgb(255, 255, 255) !important;
+        }
+
+        .tablebtn {
+            margin: 1px 10px;
+        }
+
+        #itemTable th,
+        #itemTable td {
+            text-align: center;
+        }
+
+        #itemTable th:nth-child(1),
+        #itemTable td:nth-child(1) {
+            width: 40%;
+        }
+
+        #itemTable th:nth-child(2),
+        #itemTable td:nth-child(2) {
+            width: 40%;
+        }
+
+        #itemTable th:nth-child(3),
+        #itemTable td:nth-child(3) {
+            width: 20%;
+        }
+
+        #mainHeading {
+            text-align: center;
+            background-color: navy;
+            padding: 10px 0px;
+            color: white;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .formDiv {
+            margin: 10px 70px
+        }
+
+        .inputLabel {
+            font-weight: 500;
+            font-size: 25px;
+        }
+
+        .inputField {
+            border: 1px solid rgb(63, 63, 63) !important;
+        }
+
+        #additembtn {
+            background-color: rgba(0, 100, 0, 0.582);
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        #clearallbtn {
+            background-color: rgba(235, 0, 0, 0.727);
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+        }
+
+        #heading2 {
+            text-align: center;
+            padding: 10px 0px;
+            color: navy;
+            font-size: 35px;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #itemTable {
+            border: 2px solid navy;
+        }
+
+        thead {
+            font-weight: bolder;
+            color: wheat;
+            background-color: navy;
+        }
+
+        #totalPrice {
+            font-weight: bolder;
+            background-color: navy;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            background-color: black;
+            color: yellow;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2 id="mainHeading">
+        Expenses Tracker</h2>
+
+    <div class="formDiv">
+        <label for="iteminput" class="inputLabel">Enter Item</label>
+        <br>
+        <input type="text" minlength="3" id="iteminput" placeholder="Item" class="form-control inputField">
+        <br>
+        <label for="priceinput" class="inputLabel">Enter Price</label>
+        <br>
+        <input type="number" min="0" id="priceinput" placeholder="123" class="form-control inputField">
+        <br><br>
+        <button type="submit" id="additembtn" class="btn form-control" onclick="additem()">Add Item</button>
+        <br>
+        <br>
+        <button type="submit" id="clearallbtn" class="btn form-control" onclick="clearall()">Clear All</button>
+    </div>
+    <br>
+    <hr>
+    <h2 id="heading2">All Expenses</h2>
+    <div class="formDiv">
+
+        <table class="table table-bordered text-center" id="itemTable">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be inserted here -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><strong>Total</strong></td>
+                    <td id="totalPrice">0</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editItemInput" class="form-control mb-3" placeholder="Item">
+                    <input type="number" id="editPriceInput" class="form-control" placeholder="Price">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveEdit()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <span>This website is designed by Muhammad Sufyan &copy; 2024</span>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        let currentEditItem = null;
+
+        function additem() {
+            const itemInput = document.getElementById("iteminput");
+            const priceInput = document.getElementById("priceinput");
+            const item = itemInput.value;
+            const price = priceInput.value;
+
+            if (item && price) {
+                localStorage.setItem(item, price);
+                itemInput.value = '';
+                priceInput.value = '';
+                Swal.fire('Success', 'Item added successfully!', 'success');
+                displayItems();
+            } else {
+                Swal.fire('Error', 'Please enter both item and price', 'error');
+            }
+        }
+
+        function edititem(item) {
+            currentEditItem = item;
+            const price = localStorage.getItem(item);
+            document.getElementById("editItemInput").value = item;
+            document.getElementById("editPriceInput").value = price;
+            const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            editModal.show();
+        }
+
+        function saveEdit() {
+            const newItem = document.getElementById("editItemInput").value;
+            const newPrice = document.getElementById("editPriceInput").value;
+
+            if (newItem && newPrice) {
+                localStorage.removeItem(currentEditItem);
+                localStorage.setItem(newItem, newPrice);
+                Swal.fire('Success', 'Item updated successfully!', 'success');
+                displayItems();
+                const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                editModal.hide();
+            } else {
+                Swal.fire('Error', 'Please enter both item and price', 'error');
+            }
+        }
+
+        function deleteitem(item) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do you really want to delete "${item}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem(item);
+                    Swal.fire('Deleted!', 'Your item has been deleted.', 'success');
+                    displayItems();
+                }
+            });
+        }
+
+        function clearall() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you really want to clear all items?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, clear all!',
+                cancelButtonText: 'No, keep them'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.clear();
+                    Swal.fire('Cleared!', 'All items have been cleared.', 'success');
+                    displayItems();
+                }
+            });
+        }
+
+        function displayItems() {
+            const tableBody = document.getElementById("itemTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = ""; // Clear existing rows
+            let total = 0;
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+
+                const row = tableBody.insertRow();
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+
+                cell1.textContent = key;
+                cell2.textContent = value;
+                total += parseFloat(value);
+
+                const editButton = document.createElement("button");
+                editButton.className = "btn btn-primary btn-sm tablebtn";
+                editButton.textContent = "Edit";
+                editButton.onclick = (function (key) {
+                    return function () {
+                        edititem(key);
+                    };
+                })(key);
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "btn btn-danger btn-sm tablebtn";
+                deleteButton.textContent = "Delete";
+                deleteButton.onclick = (function (key) {
+                    return function () {
+                        deleteitem(key);
+                    };
+                })(key);
+
+                cell3.appendChild(editButton);
+                cell3.appendChild(deleteButton);
+            }
+
+            document.getElementById("totalPrice").textContent = total.toFixed(2);
+        }
+
+        // Display items when the page loads
+        window.onload = displayItems;
+    </script>
+</body>
+
+</html>
